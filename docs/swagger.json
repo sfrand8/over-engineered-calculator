@@ -1,0 +1,160 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {},
+        "license": {}
+    },
+    "paths": {
+        "/api/v1/calculate": {
+            "post": {
+                "description": "This endpoint will take a simple calculation string and return the result",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "calculations"
+                ],
+                "summary": "Calculate a simple expression",
+                "parameters": [
+                    {
+                        "description": "Calculation request body",
+                        "name": "calculation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/calculate.Request"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token (UUID)",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Calculation result",
+                        "schema": {
+                            "$ref": "#/definitions/calculate.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid expression",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error saving calculation",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/get_history": {
+            "get": {
+                "description": "This endpoint will retrieve the calculation get_history for a user based on the Authorization token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "calculations"
+                ],
+                "summary": "Get calculation get_history for a user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization token (UUID)",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Calculation get_history for the user",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/get_history.Response"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error retrieving get_history",
+                        "schema": {
+                            "$ref": "#/definitions/get_history.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "calculate.Request": {
+            "type": "object",
+            "properties": {
+                "expression": {
+                    "type": "string"
+                }
+            }
+        },
+        "calculate.Response": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "description": "@Description The result of the mathematical expression evaluation\n@Example \"42.0\" // Optional: Provide an example result",
+                    "type": "string"
+                }
+            }
+        },
+        "get_history.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "get_history.HistoryEntry": {
+            "type": "object",
+            "properties": {
+                "expression": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "string"
+                }
+            }
+        },
+        "get_history.Response": {
+            "type": "object",
+            "properties": {
+                "calculationHistory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/get_history.HistoryEntry"
+                    }
+                }
+            }
+        },
+        "helpers.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

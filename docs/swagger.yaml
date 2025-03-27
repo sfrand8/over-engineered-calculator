@@ -1,0 +1,107 @@
+definitions:
+  calculate.Request:
+    properties:
+      expression:
+        type: string
+    type: object
+  calculate.Response:
+    properties:
+      result:
+        description: |-
+          @Description The result of the mathematical expression evaluation
+          @Example "42.0" // Optional: Provide an example result
+        type: string
+    type: object
+  get_history.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  get_history.HistoryEntry:
+    properties:
+      expression:
+        type: string
+      result:
+        type: string
+    type: object
+  get_history.Response:
+    properties:
+      calculationHistory:
+        items:
+          $ref: '#/definitions/get_history.HistoryEntry'
+        type: array
+    type: object
+  helpers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /api/v1/calculate:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint will take a simple calculation string and return
+        the result
+      parameters:
+      - description: Calculation request body
+        in: body
+        name: calculation
+        required: true
+        schema:
+          $ref: '#/definitions/calculate.Request'
+      - description: Authorization token (UUID)
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Calculation result
+          schema:
+            $ref: '#/definitions/calculate.Response'
+        "400":
+          description: Invalid expression
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponse'
+        "500":
+          description: Error saving calculation
+          schema:
+            $ref: '#/definitions/helpers.ErrorResponse'
+      summary: Calculate a simple expression
+      tags:
+      - calculations
+  /api/v1/get_history:
+    get:
+      consumes:
+      - application/json
+      description: This endpoint will retrieve the calculation get_history for a user
+        based on the Authorization token
+      parameters:
+      - description: Authorization token (UUID)
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Calculation get_history for the user
+          schema:
+            items:
+              $ref: '#/definitions/get_history.Response'
+            type: array
+        "500":
+          description: Error retrieving get_history
+          schema:
+            $ref: '#/definitions/get_history.ErrorResponse'
+      summary: Get calculation get_history for a user
+      tags:
+      - calculations
+swagger: "2.0"

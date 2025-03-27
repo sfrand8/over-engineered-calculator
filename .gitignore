@@ -1,0 +1,10 @@
+﻿# Ignore IDE files
+.idea/
+
+# Ignore build-related files and temporary files
+*.log
+*.out
+*.swp
+
+# Ignore deployment files
+fly.toml

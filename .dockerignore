@@ -1,0 +1,40 @@
+# Ignore IDE files (JetBrains, VSCode, etc.)
+.idea/
+.vscode/
+
+# Ignore build and binary files
+*.exe
+*.out
+*.bin
+*.log
+*.swp
+
+# Ignore temporary files
+*.swp
+*.bak
+*.tmp
+
+# Ignore git-related files (we keep them in the repo, but not in Docker)
+.git/
+.gitignore
+
+# Ignore Go build files
+*.test
+*.prof
+*.cover
+
+# Ignore Docker-related files (though you likely want to keep your Dockerfile itself)
+Dockerfile
+.dockerignore
+
+# Ignore node_modules (if using Node.js for frontend or tooling)
+node_modules/
+
+# Ignore any files or directories that are not needed for the Docker container to function
+README.md
+
+# Ignore build artifacts (Go binaries)
+bin/
+
+# Ignore the fly.toml if you do not want it in your Docker image
+fly.toml
