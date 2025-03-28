@@ -33,9 +33,15 @@ func TestCreateHistoryHandler(t *testing.T) {
 					return expectedHistory, nil
 				},
 			}
-			request = createHttpRequest(userID)
-			rr      = test_helpers.NewResponseWriterMock()
-			sut     = createHistoryHandler(historyRetrieverMock)
+			request          = createHttpRequest(userID)
+			rr               = test_helpers.NewResponseWriterMock()
+			sut              = createHistoryHandler(historyRetrieverMock)
+			expectedResponse = Response{
+				CalculationHistory: []HistoryEntry{
+					{Expression: expectedHistory[0].Expression, Result: expectedHistory[0].Result},
+					{Expression: expectedHistory[1].Expression, Result: expectedHistory[1].Result},
+				},
+			}
 		)
 
 		// act
@@ -46,7 +52,7 @@ func TestCreateHistoryHandler(t *testing.T) {
 		var resp Response
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
-		assert.Equal(t, mapResponse(expectedHistory), resp)
+		assert.Equal(t, expectedResponse, resp)
 	})
 
 	t.Run("returns internal server error when history retriever fails", func(t *testing.T) {
