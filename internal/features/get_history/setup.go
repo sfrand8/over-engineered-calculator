@@ -1,8 +1,8 @@
 ﻿package get_history
 
 import (
-	"OverEngineeredCalculator/database"
 	"github.com/go-chi/chi/v5"
+	"over-engineered-calculator/internal/database"
 )
 
 func Setup(mux chi.Router) {

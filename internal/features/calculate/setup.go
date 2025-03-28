@@ -1,8 +1,8 @@
 ﻿package calculate
 
 import (
-	"OverEngineeredCalculator/database"
 	"github.com/go-chi/chi/v5"
+	"over-engineered-calculator/internal/database"
 )
 
 func Setup(router chi.Router) {

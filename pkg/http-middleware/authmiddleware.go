@@ -1,7 +1,7 @@
-﻿package http
+﻿package http_middleware
 
 import (
-	"OverEngineeredCalculator/helpers"
+	"context"
 	"github.com/google/uuid"
 	"net/http"
 	"strings"
@@ -25,7 +25,20 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		// Store user ID in context (for future use)
 		ctx := r.Context()
-		ctx = helpers.ContextWithUserID(ctx, token)
+		ctx = ContextWithUserID(ctx, token)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+const userIDKey string = "userID"
+
+func ContextWithUserID(ctx context.Context, userID string) context.Context {
+	return context.WithValue(ctx, userIDKey, userID)
+}
+
+func GetUserIDFromContext(ctx context.Context) string {
+	if userID, ok := ctx.Value(userIDKey).(string); ok {
+		return userID
+	}
+	return ""
 }

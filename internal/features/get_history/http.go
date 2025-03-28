@@ -1,11 +1,12 @@
 ﻿package get_history
 
 import (
-	"OverEngineeredCalculator/database"
-	"OverEngineeredCalculator/helpers"
 	"encoding/json"
+	http_middleware "github.com/sfrand8/over-engineered-calculator/pkg/http-middleware"
 	"log"
 	"net/http"
+	"over-engineered-calculator/internal/database"
+	"over-engineered-calculator/internal/helpers"
 )
 
 type calculationHistoryRetriever interface {
@@ -38,7 +39,7 @@ type ErrorResponse struct {
 // @Router /api/v1/get_history [get]
 func createHistoryHandler(calculationHistoryRetriever calculationHistoryRetriever) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		userID := helpers.GetUserIDFromContext(r.Context())
+		userID := http_middleware.GetUserIDFromContext(r.Context())
 
 		history, err := calculationHistoryRetriever.GetHistory(userID)
 		if err != nil {
