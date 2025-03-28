@@ -22,14 +22,19 @@ var (
 	once     sync.Once
 )
 
+func newCalculationHistoryRepository() *CalculationHistoryRepository {
+	return &CalculationHistoryRepository{
+		mutex:                   sync.Mutex{},
+		history:                 make(map[string][]Calculation),
+		maxHistory:              1000, // Default max entries across all users
+		currentTotalHistorySize: 0,    // counter to ensure we reset get_history after a total of maxHistory entries
+	}
+}
+
+// Exposed Singleton of the CalculationHistoryRepository
 func GetCalculationHistoryRepository() *CalculationHistoryRepository {
 	once.Do(func() {
-		instance = &CalculationHistoryRepository{
-			mutex:                   sync.Mutex{},
-			history:                 make(map[string][]Calculation),
-			maxHistory:              1000, // Default max entries across all users
-			currentTotalHistorySize: 0,    // counter to ensure we reset get_history after a total of maxHistory entries
-		}
+		instance = newCalculationHistoryRepository()
 	})
 	return instance
 }
@@ -39,7 +44,7 @@ func GetCalculationHistoryRepository() *CalculationHistoryRepository {
 func (r *CalculationHistoryRepository) resetHistoryIfTooLarge() {
 	// and in theory we could be missing a lock on a mutex here, again it's just for demonstration purposes.
 	// A simple solution would just be putting this into the Add function, I just moved it here to not pollute right now
-	if r.currentTotalHistorySize > r.maxHistory {
+	if r.currentTotalHistorySize >= r.maxHistory {
 		log.Println("Total get_history size exceeded max limit, resetting get_history map")
 		r.history = make(map[string][]Calculation) // Reinitialize the map
 		r.currentTotalHistorySize = 0              // Reset the counter
