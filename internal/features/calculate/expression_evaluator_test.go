@@ -21,7 +21,7 @@ func TestGovaluateEvaluator_Evaluate(t *testing.T) {
 
 	t.Run("returns error for invalid expression", func(t *testing.T) {
 		var (
-			expressionString = "invalidExpression"
+			expressionString = ""
 			evaluator        = &GovaluateEvaluator{}
 		)
 
