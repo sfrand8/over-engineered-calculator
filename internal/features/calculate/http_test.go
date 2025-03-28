@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"over-engineered-calculator/internal/database"
 	"over-engineered-calculator/internal/helpers"
-	"over-engineered-calculator/internal/test_helpers"
 	"testing"
 )
 
@@ -35,7 +35,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 				},
 			}
 			request = createHttpRequest(Request{Expression: expressionString}, userID)
-			rr      = test_helpers.NewResponseWriterMock()
+			rr      = httptest.NewRecorder()
 			sut     = createCalculateHandler(calculatorMock)
 		)
 
@@ -43,7 +43,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusOK, rr.StatusCode)
+		assert.Equal(t, http.StatusOK, rr.Code)
 		var resp Response
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
@@ -61,7 +61,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 				},
 			}
 			request = createHttpRequest(Request{Expression: expressionString}, userID)
-			rr      = test_helpers.NewResponseWriterMock()
+			rr      = httptest.NewRecorder()
 			sut     = createCalculateHandler(calculatorMock)
 		)
 
@@ -69,7 +69,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusBadRequest, rr.StatusCode)
+		assert.Equal(t, http.StatusBadRequest, rr.Code)
 		var resp helpers.ErrorResponse
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
@@ -87,7 +87,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 				},
 			}
 			request = createHttpRequest(Request{Expression: expressionString}, userID)
-			rr      = test_helpers.NewResponseWriterMock()
+			rr      = httptest.NewRecorder()
 			sut     = createCalculateHandler(calculatorMock)
 		)
 
@@ -95,7 +95,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusInternalServerError, rr.StatusCode)
+		assert.Equal(t, http.StatusInternalServerError, rr.Code)
 		var resp helpers.ErrorResponse
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
