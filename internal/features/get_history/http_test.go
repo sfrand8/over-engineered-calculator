@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"over-engineered-calculator/internal/database"
 	"over-engineered-calculator/internal/helpers"
-	"over-engineered-calculator/internal/test_helpers"
 	"testing"
 )
 
@@ -34,7 +34,7 @@ func TestCreateHistoryHandler(t *testing.T) {
 				},
 			}
 			request          = createHttpRequest(userID)
-			rr               = test_helpers.NewResponseWriterMock()
+			rr               = httptest.NewRecorder()
 			sut              = createHistoryHandler(historyRetrieverMock)
 			expectedResponse = Response{
 				CalculationHistory: []HistoryEntry{
@@ -48,7 +48,7 @@ func TestCreateHistoryHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusOK, rr.StatusCode)
+		assert.Equal(t, http.StatusOK, rr.Code)
 		var resp Response
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
@@ -65,7 +65,7 @@ func TestCreateHistoryHandler(t *testing.T) {
 				},
 			}
 			request = createHttpRequest(userID)
-			rr      = test_helpers.NewResponseWriterMock()
+			rr      = httptest.NewRecorder()
 			sut     = createHistoryHandler(historyRetrieverMock)
 		)
 
@@ -73,7 +73,7 @@ func TestCreateHistoryHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusInternalServerError, rr.StatusCode)
+		assert.Equal(t, http.StatusInternalServerError, rr.Code)
 		var resp helpers.ErrorResponse
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
