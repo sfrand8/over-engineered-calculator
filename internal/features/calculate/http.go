@@ -2,12 +2,11 @@
 
 import (
 	"encoding/json"
+	"errors"
 	http_middleware "github.com/sfrand8/over-engineered-calculator/pkg/http-middleware"
 	"log"
 	"net/http"
-	"over-engineered-calculator/internal/database"
 	"over-engineered-calculator/internal/helpers"
-	"strconv"
 )
 
 // Request represents the structure of the request body for the calculation
@@ -25,10 +24,6 @@ type Response struct {
 	Result string `json:"result,omitempty"`
 }
 
-type calculationHistorySaver interface {
-	Save(userID string, calculation database.Calculation) error
-}
-
 // @Summary Calculate a simple expression
 // @Description This endpoint will take a simple calculation string and return the result
 // @Tags calculations
@@ -40,7 +35,12 @@ type calculationHistorySaver interface {
 // @Failure 400 {object} helpers.ErrorResponse "Invalid expression"
 // @Failure 500 {object} helpers.ErrorResponse "Error saving calculation"
 // @Router /api/v1/calculate [post]
-func createCalculateHandler(calculationHistorySaver calculationHistorySaver) func(w http.ResponseWriter, r *http.Request) {
+func createCalculateHandler(calculator calculator) func(w http.ResponseWriter, r *http.Request) {
+	var writeInternalErrorResponse = func(w http.ResponseWriter, err error) {
+		log.Printf("Error when encoding get_history: %s", err)
+		helpers.WriteErrorResponse(w, "something went wrong", http.StatusInternalServerError)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req Request
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -48,37 +48,19 @@ func createCalculateHandler(calculationHistorySaver calculationHistorySaver) fun
 			return
 		}
 
-		calculation, err := calculate(req.Expression)
+		calculation, err := calculator.PerformCalculationForUser(http_middleware.GetUserIDFromContext(r.Context()), req.Expression)
 		if err != nil {
-			//TODO: consider adding different errorCode handling
-			helpers.WriteErrorResponse(w, "Invalid expression", http.StatusBadRequest)
+			if errors.Is(err, InvalidExpressionError) {
+				helpers.WriteErrorResponse(w, "Invalid expression", http.StatusBadRequest)
+				return
+			}
+			writeInternalErrorResponse(w, err)
 			return
-		}
-
-		userID := http_middleware.GetUserIDFromContext(r.Context())
-		err = calculationHistorySaver.Save(userID, calculation)
-		if err != nil {
-			log.Printf("Error when saving calculation: %s", err)
-			helpers.WriteErrorResponse(w, "something went wrong", http.StatusInternalServerError)
 		}
 
 		err = json.NewEncoder(w).Encode(Response{Result: calculation.Result})
 		if err != nil {
-			log.Printf("Error when encoding get_history: %s", err)
-			helpers.WriteErrorResponse(w, "something went wrong", http.StatusInternalServerError)
+			writeInternalErrorResponse(w, err)
 		}
 	}
-}
-
-// TODO: Extract to a calculate service and implement ... calculations ..
-func calculate(expr string) (database.Calculation, error) {
-	_, err := strconv.Atoi(expr)
-	if err != nil {
-		return database.Calculation{}, err
-	}
-
-	return database.Calculation{
-		Expression: expr,
-		Result:     expr,
-	}, nil
 }
