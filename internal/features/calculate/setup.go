@@ -6,5 +6,5 @@ import (
 )
 
 func Setup(router chi.Router) {
-	router.Post("/calculate", createCalculateHandler(database.GetCalculationHistoryRepository()))
+	router.Post("/calculate", createCalculateHandler(NewCalculator(&GovaluateEvaluator{}, database.GetCalculationHistoryRepository())))
 }
