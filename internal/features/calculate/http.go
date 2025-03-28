@@ -1,11 +1,12 @@
 ﻿package calculate
 
 import (
-	"OverEngineeredCalculator/database"
-	"OverEngineeredCalculator/helpers"
 	"encoding/json"
+	http_middleware "github.com/sfrand8/over-engineered-calculator/pkg/http-middleware"
 	"log"
 	"net/http"
+	"over-engineered-calculator/internal/database"
+	"over-engineered-calculator/internal/helpers"
 	"strconv"
 )
 
@@ -54,7 +55,7 @@ func createCalculateHandler(calculationHistorySaver calculationHistorySaver) fun
 			return
 		}
 
-		userID := helpers.GetUserIDFromContext(r.Context())
+		userID := http_middleware.GetUserIDFromContext(r.Context())
 		err = calculationHistorySaver.Save(userID, calculation)
 		if err != nil {
 			log.Printf("Error when saving calculation: %s", err)
