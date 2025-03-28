@@ -43,13 +43,13 @@ func createHistoryHandler(calculationHistoryRetriever calculationHistoryRetrieve
 
 		history, err := calculationHistoryRetriever.GetHistory(userID)
 		if err != nil {
-			log.Printf("Error when encoding get_history: %s", err)
+			log.Printf("Error when fetching Calculation History: %s", err)
 			helpers.WriteErrorResponse(w, "something went wrong", http.StatusInternalServerError)
 		}
 
 		err = json.NewEncoder(w).Encode(mapResponse(history))
 		if err != nil {
-			log.Printf("Error when encoding get_history: %s", err)
+			log.Printf("Error when encoding history response: %s", err)
 			helpers.WriteErrorResponse(w, "something went wrong", http.StatusInternalServerError)
 		}
 	}
