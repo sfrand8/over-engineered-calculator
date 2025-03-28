@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"over-engineered-calculator/internal/database"
 	"over-engineered-calculator/internal/helpers"
+	"over-engineered-calculator/internal/test_helpers"
 	"testing"
 )
 
@@ -34,7 +35,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 				},
 			}
 			request = createHttpRequest(Request{Expression: expressionString}, userID)
-			rr      = newResponseWriterMock()
+			rr      = test_helpers.NewResponseWriterMock()
 			sut     = createCalculateHandler(calculatorMock)
 		)
 
@@ -42,9 +43,9 @@ func TestCreateCalculateHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusOK, rr.statusCode)
+		assert.Equal(t, http.StatusOK, rr.StatusCode)
 		var resp Response
-		err := json.NewDecoder(rr.body).Decode(&resp)
+		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedResult, resp.Result)
 	})
@@ -60,7 +61,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 				},
 			}
 			request = createHttpRequest(Request{Expression: expressionString}, userID)
-			rr      = newResponseWriterMock()
+			rr      = test_helpers.NewResponseWriterMock()
 			sut     = createCalculateHandler(calculatorMock)
 		)
 
@@ -68,9 +69,9 @@ func TestCreateCalculateHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusBadRequest, rr.statusCode)
+		assert.Equal(t, http.StatusBadRequest, rr.StatusCode)
 		var resp helpers.ErrorResponse
-		err := json.NewDecoder(rr.body).Decode(&resp)
+		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedError, resp.Error)
 	})
@@ -86,7 +87,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 				},
 			}
 			request = createHttpRequest(Request{Expression: expressionString}, userID)
-			rr      = newResponseWriterMock()
+			rr      = test_helpers.NewResponseWriterMock()
 			sut     = createCalculateHandler(calculatorMock)
 		)
 
@@ -94,36 +95,10 @@ func TestCreateCalculateHandler(t *testing.T) {
 		sut(rr, request)
 
 		// assert
-		assert.Equal(t, http.StatusInternalServerError, rr.statusCode)
+		assert.Equal(t, http.StatusInternalServerError, rr.StatusCode)
 		var resp helpers.ErrorResponse
-		err := json.NewDecoder(rr.body).Decode(&resp)
+		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedError, resp.Error)
 	})
-}
-
-type responseWriterMock struct {
-	header     http.Header
-	body       *bytes.Buffer
-	statusCode int
-}
-
-func newResponseWriterMock() *responseWriterMock {
-	return &responseWriterMock{
-		header:     http.Header{},
-		body:       new(bytes.Buffer),
-		statusCode: http.StatusOK,
-	}
-}
-
-func (rw *responseWriterMock) Header() http.Header {
-	return rw.header
-}
-
-func (rw *responseWriterMock) Write(b []byte) (int, error) {
-	return rw.body.Write(b)
-}
-
-func (rw *responseWriterMock) WriteHeader(statusCode int) {
-	rw.statusCode = statusCode
 }
