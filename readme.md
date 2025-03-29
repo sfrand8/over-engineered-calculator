@@ -42,17 +42,21 @@ docker run -p 8080:8080 over-engineered-calculator:latest
 
 ---
 
-## **📚 API Documentation (Swagger)**
-After running the server, access Swagger UI at:  
-👉 `http://localhost:8080/swagger/index.html`
+## **📚 API Documentation (Swagger) & Postman**
+OpenAPI documentation is generated using **Swaggo**.
 
-generate the documentation with swaggo:
 ```
 swag init
 ```
----
 
-Generate a go client from the swagger spec using [openapi-generator](https://openapi-generator.tech/docs/generators/go/)
+After running the server, access Swagger UI at:  
+👉 `http://localhost:8080/swagger/index.html`
+
+A postman collection is also created and found in the `docs` folder along with the swagger.json/yaml files.
+
+Generate the documentation with swaggo:
+
+For testing generate a go client from the swagger spec using [openapi-generator](https://openapi-generator.tech/docs/generators/go/)
 
 Run the following command in the root directory of the project:
 ```
