@@ -9,10 +9,6 @@ import (
 	"over-engineered-calculator/internal/helpers"
 )
 
-type calculationHistoryRetriever interface {
-	GetHistory(userID string) ([]database.Calculation, error)
-}
-
 type Response struct {
 	CalculationHistory []HistoryEntry `json:"calculationHistory"`
 }

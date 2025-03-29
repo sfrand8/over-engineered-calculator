@@ -14,6 +14,7 @@ type ErrorResponse struct {
 
 func WriteErrorResponse(w http.ResponseWriter, errorString string, responseCode int) {
 	w.WriteHeader(responseCode)
+	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(ErrorResponse{Error: errorString})
 	if err != nil {
 		log.Printf("Error when encoding error response: %s", err)
