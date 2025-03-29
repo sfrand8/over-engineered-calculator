@@ -6,6 +6,8 @@ require (
 	github.com/Knetic/govaluate v3.0.0+incompatible
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/go-chi/chi/v5 v5.2.1
+	github.com/google/uuid v1.6.0
+	github.com/sfrand8/over-engineered-calculator/pkg/http-client v0.0.0-00010101000000-000000000000
 	github.com/sfrand8/over-engineered-calculator/pkg/http-middleware v0.0.0-00010101000000-000000000000
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/http-swagger v1.3.4
@@ -19,7 +21,6 @@ require (
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/spec v0.20.6 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
@@ -31,3 +32,5 @@ require (
 )
 
 replace github.com/sfrand8/over-engineered-calculator/pkg/http-middleware => ./pkg/http-middleware
+
+replace github.com/sfrand8/over-engineered-calculator/pkg/http-client => ./pkg/http-client

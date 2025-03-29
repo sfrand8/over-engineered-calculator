@@ -53,6 +53,7 @@ func TestCreateHistoryHandler(t *testing.T) {
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedResponse, resp)
+		assert.Equal(t, rr.Header()["Content-Type"][0], "application/json")
 	})
 
 	t.Run("returns internal server error when history retriever fails", func(t *testing.T) {

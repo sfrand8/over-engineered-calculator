@@ -1,0 +1,134 @@
+openapi: 3.0.1
+info:
+  contact: {}
+  description: This is a sample API for an over engineered calculator for a coding
+    test
+  license: {}
+  title: Over Engineered Calculator
+  version: "1.0"
+servers:
+- url: /api/v1
+paths:
+  /calculate:
+    post:
+      description: This endpoint will take a simple calculation string and return
+        the result
+      parameters:
+      - description: Authorization token (UUID)
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/calculate.Request'
+        description: Calculation request body
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/calculate.Response'
+          description: Calculation result
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helpers.ErrorResponse'
+          description: Invalid expression
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/helpers.ErrorResponse'
+          description: Error saving calculation
+      summary: Calculate a simple expression
+      tags:
+      - calculations
+      x-codegen-request-body-name: calculation
+  /get_history:
+    get:
+      description: This endpoint will retrieve the calculation get_history for a user
+        based on the Authorization token
+      parameters:
+      - description: Authorization token (UUID)
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_history.Response'
+          description: Calculation get_history for the user
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_history.ErrorResponse'
+          description: Error retrieving get_history
+      summary: Get calculation get_history for a user
+      tags:
+      - calculations
+components:
+  schemas:
+    calculate.Request:
+      properties:
+        expression:
+          type: string
+      type: object
+    calculate.Response:
+      example:
+        result: result
+      properties:
+        result:
+          description: |-
+            @Description The result of the mathematical expression evaluation
+            @Example "42.0" // Optional: Provide an example result
+          type: string
+      type: object
+    get_history.ErrorResponse:
+      example:
+        error: error
+      properties:
+        error:
+          type: string
+      type: object
+    get_history.HistoryEntry:
+      example:
+        result: result
+        expression: expression
+      properties:
+        expression:
+          type: string
+        result:
+          type: string
+      type: object
+    get_history.Response:
+      example:
+        calculationHistory:
+        - result: result
+          expression: expression
+        - result: result
+          expression: expression
+      properties:
+        calculationHistory:
+          items:
+            $ref: '#/components/schemas/get_history.HistoryEntry'
+          type: array
+      type: object
+    helpers.ErrorResponse:
+      example:
+        error: error
+      properties:
+        error:
+          type: string
+      type: object
+x-original-swagger-version: "2.0"

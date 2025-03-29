@@ -48,6 +48,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedResult, resp.Result)
+		assert.Equal(t, rr.Header()["Content-Type"][0], "application/json")
 	})
 
 	t.Run("returns bad request when calculator returns InvalidExpressionError", func(t *testing.T) {

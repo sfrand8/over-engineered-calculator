@@ -34,7 +34,7 @@ type Response struct {
 // @Success 200 {object} Response "Calculation result"
 // @Failure 400 {object} helpers.ErrorResponse "Invalid expression"
 // @Failure 500 {object} helpers.ErrorResponse "Error saving calculation"
-// @Router /api/v1/calculate [post]
+// @Router /calculate [post]
 func createCalculateHandler(calculator calculator) func(w http.ResponseWriter, r *http.Request) {
 	var writeInternalErrorResponse = func(w http.ResponseWriter, err error) {
 		log.Printf("Error when encoding get_history: %s", err)
@@ -58,6 +58,7 @@ func createCalculateHandler(calculator calculator) func(w http.ResponseWriter, r
 			return
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		err = json.NewEncoder(w).Encode(Response{Result: calculation.Result})
 		if err != nil {
 			writeInternalErrorResponse(w, err)
