@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   calculate.Request:
     properties:
@@ -38,9 +39,13 @@ definitions:
     type: object
 info:
   contact: {}
+  description: This is a sample API for an over engineered calculator for a coding
+    test
   license: {}
+  title: Over Engineered Calculator
+  version: "1.0"
 paths:
-  /api/v1/calculate:
+  /calculate:
     post:
       consumes:
       - application/json
@@ -76,7 +81,7 @@ paths:
       summary: Calculate a simple expression
       tags:
       - calculations
-  /api/v1/get_history:
+  /get_history:
     get:
       consumes:
       - application/json
@@ -94,9 +99,7 @@ paths:
         "200":
           description: Calculation get_history for the user
           schema:
-            items:
-              $ref: '#/definitions/get_history.Response'
-            type: array
+            $ref: '#/definitions/get_history.Response'
         "500":
           description: Error retrieving get_history
           schema:

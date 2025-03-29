@@ -1,11 +1,15 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "This is a sample API for an over engineered calculator for a coding test",
+        "title": "Over Engineered Calculator",
         "contact": {},
-        "license": {}
+        "license": {},
+        "version": "1.0"
     },
+    "basePath": "/api/v1",
     "paths": {
-        "/api/v1/calculate": {
+        "/calculate": {
             "post": {
                 "description": "This endpoint will take a simple calculation string and return the result",
                 "consumes": [
@@ -58,7 +62,7 @@
                 }
             }
         },
-        "/api/v1/get_history": {
+        "/get_history": {
             "get": {
                 "description": "This endpoint will retrieve the calculation get_history for a user based on the Authorization token",
                 "consumes": [
@@ -84,10 +88,7 @@
                     "200": {
                         "description": "Calculation get_history for the user",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/get_history.Response"
-                            }
+                            "$ref": "#/definitions/get_history.Response"
                         }
                     },
                     "500": {

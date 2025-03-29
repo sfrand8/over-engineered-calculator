@@ -25,7 +25,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/calculate": {
+        "/calculate": {
             "post": {
                 "description": "This endpoint will take a simple calculation string and return the result",
                 "consumes": [
@@ -78,7 +78,7 @@ var doc = `{
                 }
             }
         },
-        "/api/v1/get_history": {
+        "/get_history": {
             "get": {
                 "description": "This endpoint will retrieve the calculation get_history for a user based on the Authorization token",
                 "consumes": [
@@ -104,10 +104,7 @@ var doc = `{
                     "200": {
                         "description": "Calculation get_history for the user",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/get_history.Response"
-                            }
+                            "$ref": "#/definitions/get_history.Response"
                         }
                     },
                     "500": {
@@ -190,12 +187,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "",
+	Version:     "1.0",
 	Host:        "",
-	BasePath:    "",
+	BasePath:    "/api/v1",
 	Schemes:     []string{},
-	Title:       "",
-	Description: "",
+	Title:       "Over Engineered Calculator",
+	Description: "This is a sample API for an over engineered calculator for a coding test",
 }
 
 type s struct{}

@@ -34,9 +34,9 @@ type ErrorResponse struct {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Authorization token (UUID)"
-// @Success 200 {array} Response "Calculation get_history for the user"
+// @Success 200 {object} Response "Calculation get_history for the user"
 // @Failure 500 {object} ErrorResponse "Error retrieving get_history"
-// @Router /api/v1/get_history [get]
+// @Router /get_history [get]
 func createHistoryHandler(calculationHistoryRetriever calculationHistoryRetriever) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID := http_middleware.GetUserIDFromContext(r.Context())
@@ -47,6 +47,7 @@ func createHistoryHandler(calculationHistoryRetriever calculationHistoryRetrieve
 			helpers.WriteErrorResponse(w, "something went wrong", http.StatusInternalServerError)
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		err = json.NewEncoder(w).Encode(mapResponse(history))
 		if err != nil {
 			log.Printf("Error when encoding history response: %s", err)
