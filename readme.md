@@ -11,6 +11,7 @@ In the bottom of this readme you can find an explanation of what I would change 
 - **Retrieve history** of calculations (`/api/v1/get_history`)
 - **OpenAPI documentation** generated with Swaggo
 - **Dockerized & deployed on Fly.io**
+- **"Bearer token" authentication** for API access - just add a "Bearer <random UUID>" to the Authorizaiton header of the request and it will be accepted.  
 
 ---
 
@@ -73,7 +74,7 @@ The deployed API will be available at:
 ---
 
 ## **⏳ What would I change with more time ?**
-Create an actual calculator instead of just importing a library that does it for me.
-Add open telemetry to monitor the API with a middleware to track the requests and responses.
-Add a database to store the history of calculations and make it persistent so it isn't removed after each deployment.
-Could also add a user authentication system to restrict access to the API as right now it's just anyone with a uuid.
+- Create an actual calculator instead of just importing a library that does it for me.
+- Add open telemetry to monitor the API with a middleware to track the requests and responses.
+- Add a database to store the history of calculations and make it persistent so it isn't removed after each deployment.
+- Could also add a user authentication system to restrict access to the API as right now it's just anyone with a uuid.
