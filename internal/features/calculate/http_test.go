@@ -47,8 +47,8 @@ func TestCreateCalculateHandler(t *testing.T) {
 		var resp Response
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
-		assert.Equal(t, expectedResult, resp.Result)
 		assert.Equal(t, rr.Header()["Content-Type"][0], "application/json")
+		assert.Equal(t, expectedResult, resp.Result)
 	})
 
 	t.Run("returns bad request when calculator returns InvalidExpressionError", func(t *testing.T) {
@@ -74,6 +74,7 @@ func TestCreateCalculateHandler(t *testing.T) {
 		var resp helpers.ErrorResponse
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
+		assert.Equal(t, rr.Header()["Content-Type"][0], "application/json")
 		assert.Equal(t, expectedError, resp.Error)
 	})
 
@@ -100,6 +101,9 @@ func TestCreateCalculateHandler(t *testing.T) {
 		var resp helpers.ErrorResponse
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
+		assert.Equal(t, calculatorMock.PerformCalculationForUserCalls()[0].UserID, userID)
+		assert.Equal(t, calculatorMock.PerformCalculationForUserCalls()[0].ExpressionString, expressionString)
+		assert.Equal(t, rr.Header()["Content-Type"][0], "application/json")
 		assert.Equal(t, expectedError, resp.Error)
 	})
 }

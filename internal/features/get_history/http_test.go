@@ -79,13 +79,8 @@ func TestCreateHistoryHandler(t *testing.T) {
 		err := json.NewDecoder(rr.Body).Decode(&resp)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedError, resp.Error)
+		assert.Equal(t, rr.Header()["Content-Type"][0], "application/json")
+		assert.Len(t, historyRetrieverMock.GetHistoryCalls(), 1)
+		assert.Equal(t, historyRetrieverMock.GetHistoryCalls()[0].UserID, userID)
 	})
-}
-
-type calculationHistoryRetrieverMock struct {
-	GetHistoryFunc func(userID string) ([]database.Calculation, error)
-}
-
-func (m *calculationHistoryRetrieverMock) GetHistory(userID string) ([]database.Calculation, error) {
-	return m.GetHistoryFunc(userID)
 }

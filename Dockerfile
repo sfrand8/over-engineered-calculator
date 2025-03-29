@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Ensure we build a statically linked binary (important for Alpine)
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server ./cmd
 
 # Use a minimal base image
 FROM alpine:latest
